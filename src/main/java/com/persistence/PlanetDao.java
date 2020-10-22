@@ -12,8 +12,8 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.net.URL;
 import java.util.Properties;
 
 /**
@@ -25,29 +25,35 @@ public class PlanetDao {
      */
     Logger logger = LogManager.getLogger(this.getClass());
     private Properties properties;
-    private static final String URI_PROPERTY_FILE = "/apiUri.properties";
+
 
     /**
-     * Instantiates a new Swapi dao.
+     * Instantiates a new Planetdao.
      */
-    public PlanetDao() {
-        loadProperties();
-    }
+//    public PlanetDao() {
+//        loadProperties();
+//    }
     /**
      * Load up properties
      */
+    String result = "";
+    private String loadProperties() {
+            String propFileName = "apiUri.properties";
 
-    private void loadProperties() {
         properties = new Properties();
         try {
-            properties.load (this.getClass().getResourceAsStream("https://swapi.dev/api/planets/1/"));
+            URL url = ClassLoader.getSystemResource("apiUri.properties");
+            InputStream in = url.openStream();
+            Reader reader = new InputStreamReader(in, "UTF-8");
+            properties.load (this.getClass().getResourceAsStream(String.valueOf(reader)));
         } catch (IOException ioe) {
-            logger.error("loadProperties()...Cannot load the properties file", ioe);
+            logger.error("Cannot load the properties file", ioe);
         } catch (Exception e) {
-            logger.error("loadProperties()...", e);
+            logger.error("can not find", e);
         }
-
+        return result;
     }
+
 
     /**
      * Get planet planet.
